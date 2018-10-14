@@ -1,0 +1,161 @@
+---
+title: "MATH410HW7"
+author: "Tyler Millan"
+date: "5/29/2018"
+output: word_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+setwd("~/Desktop/MATH410/HW7")
+library(readxl)
+
+#The below function was borrowed from NICOLE RADZIWILL from https://qualityandinnovation.com/2015/03/16/one-proportion-z-test-in-r/
+
+z.test <- function(x,n,p=NULL,conf.level=0.95,alternative="less") {
+   ts.z <- NULL
+   cint <- NULL
+   p.val <- NULL
+      phat <- x/n
+      qhat <- 1 - phat
+      # If you have p0 from the population or H0, use it.
+      # Otherwise, use phat and qhat to find SE.phat:
+      if(length(p) > 0) { 
+         q <- 1-p
+         SE.phat <- sqrt((p*q)/n) 
+         ts.z <- (phat - p)/SE.phat
+         p.val <- pnorm(ts.z)
+         if(alternative=="two.sided") {
+            p.val <- p.val * 2
+         }
+         if(alternative=="greater") {
+            p.val <- 1 - p.val
+         }
+      } else {
+      # If all you have is your sample, use phat to find
+      # SE.phat, and don't run the hypothesis test:
+         SE.phat <- sqrt((phat*qhat)/n)
+      }
+      cint <- phat + c( 
+         -1*((qnorm(((1 - conf.level)/2) + conf.level))*SE.phat),
+         ((qnorm(((1 - conf.level)/2) + conf.level))*SE.phat) )
+   return(list(estimate=phat,ts.z=ts.z,p.val=p.val,cint=cint))
+}
+```
+
+8.28, 8.37, 8.39, 8.71, 8.92
+
+8.28
+```{r 8.28}
+
+x=62380
+n=159949
+p_hat<-x/n
+se<- sqrt(p_hat*(1-p_hat)/n)
+zcrit<-2.576
+moferror<-se*zcrit
+
+```
+
+a) The margin of error for 99% confidence is `r moferror`.
+
+b) This margin of error tells us possible errors in our study because the above accounted for just the random sampling error, while this accounts for anything outside of this.
+
+8.37
+```{r 8.37}
+x=35
+n=50
+pcoffee = x/n
+
+coffeetest2<-z.test(x=35, n = 50,p=.5,alternative = "greater")
+
+coffeetest2$ts.z
+```
+a)
+We are looking to test the claim that people prefer the taste of fresh brewed coffee over the taste of instant coffee.
+The null hypothesis to test this will be that the proportion is equal to .5, and our alternative will be that the proportion is greater than .5.
+H0:p=50
+Ha:p>50
+After running the one proportion test on this we get a pvalue of `r coffeetest2$p.val`. We also get a large-sample z statistic of `r coffeetest2$ts.z`.
+
+b)
+
+```{r 8.37b}
+cord.x <- c(2.83,seq(2.83,3,0.01),3) 
+cord.y <- c(0,dnorm(seq(2.83,3,0.01)),0) 
+ 
+
+curve(dnorm(x,0,1), xlim=c(-3,3), main='Standard Normal') 
+ 
+
+polygon(cord.x,cord.y,col='skyblue')
+
+
+```
+
+The above graph's shaded area starts at 2.83 with a p-value of `r coffeetest2$p.val`.
+
+c)After running the one proportion test on this we get a pvalue of `r coffeetest2$p.val` so we reject at the 5% level that people are indifferent between instant and fresh brewed coffee, implying it is significant at the 5% level. Given this a practical conclusion we can come to is that people prefer fresh brewed coffee to instant coffee.
+
+8.39
+```{r 8.39}
+
+cointest<-z.test(x=5067, n = 10000,p=.5,alternative = "two.sided")
+
+cord.x <- c(-3,seq(-3,-1.34,0.01),-1.34) 
+cord.y <- c(0,dnorm(seq(-3,-1.34,0.01)),0)
+ 
+cord1.x<- c(1.34,seq(1.34,3,0.01),3) 
+cord1.y <- c(0,dnorm(seq(1.34,3,0.01)),0)
+curve(dnorm(x,0,1), xlim=c(-3,3), main='Standard Normal') 
+ 
+
+polygon(cord.x,cord.y,col='skyblue')
+polygon(cord1.x,cord1.y,col='skyblue')
+```
+a) To test whether Kerrich's coin comes up heads is not .5 we test using a one proportion test where our null hypothesis is that the proportion is equal to .5 (H0:p=.5) and our alternative is that it is not equal to .5(Ha:p!=.5). After running our test we get a z score of `r cointest$ts.z` and a pvalue of .1802 which means it is not significant at the 5% level and we fail to reject our null hypothesis that the proportion is equal to .5. 
+
+b) The range for our 95% confidence interval that the probabilities of heads that wont be rejected at the 5% level falls between (`r cointest$cint`)
+
+8.71
+```{r 8.71}
+res <- prop.test(x = c(48, 52), n = c(60, 132),correct = FALSE, conf.level = 0.90)
+sefemale<- sqrt((res$estimate[1]*(1-res$estimate[1]))/60)
+semale<- sqrt((res$estimate[2]*(1-res$estimate[2]))/132)
+
+```
+
+a) The proportion of juvenile references for females is `r res$estimate[1]`, while the proporion of juvenile references for males is `r res$estimate[2]`. The standard error of juvenile references for females is `r sefemale`, while the standard error of juvenile references for males is `r semale`.
+8.92.
+
+b)The range for our 90% confidence interval that the proportion of juvenile references at the 10% level falls between (`r res$conf.int`).
+
+c) Sincce we want to test the significance of the two being equal we will use a two proportion z test where the null hypothesis will be that the two proportions are equal(H0: p1=p2) and where the alternative hypothesis is that the two proportions are not equal(Ha: p1!=p2). After running the test we are given a z score of 5.22 and a pvalue of `r res$p.value` which is less than the significance level of .1 so we reject the null hypothesis, which means it is sigificanct at the 10% level, meaning we can conclude there is a difference in the proportion of female references that are girls and male references that are boys.
+
+
+```{r 8.92}
+
+genderdata <- read_excel("ex08-92genderb.xls")
+#1
+prop.test(x = c(2, 7), n = c(5, 35),alternative = "less")
+#2
+prop.test(x = c(5, 18), n = c(7, 63),alternative = "less")
+#3
+prop.test(x = c(25, 14), n = c(56, 65),alternative = "less")
+#4
+prop.test(x = c(11, 19), n = c(76, 157),alternative = "less")
+#5
+prop.test(x = c(2, 12), n = c(3, 43),alternative = "less")
+#6
+prop.test(x = c(48, 52), n = c(60, 132),alternative = "less")
+#7
+prop.test(x = c(38, 70), n = c(40, 72),alternative = "less")
+#8
+prop.test(x = c(5, 6), n = c(18, 33),alternative = "less")
+#9
+prop.test(x = c(48, 128), n = c(48+24, 128+48),alternative = "less")
+#10
+prop.test(x = c(13, 32), n = c(13+5, 32+95),alternative = "less")
+```
+
+**answer:** We fail to reject reject the null hypothesis for all textbook numbers that there is a difference in proportion between juvenile references. We can conclude that there is no pattern that suggests the gender of an other being asccociated with the results of datat collected.  

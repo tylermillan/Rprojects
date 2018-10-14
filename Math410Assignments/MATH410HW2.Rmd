@@ -1,0 +1,198 @@
+---
+title: "Math 410 Homework 2"
+author: "Tyler Millan"
+date: "4/11/2018"
+output: word_document
+---
+#2.18, 2.19, 2.20, 2.22, 2.23, 2.43, 2.44, 2.81, 2.130
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+setwd("/Users/tylermillan/Desktop/MATH410/MATH410_HW2")
+```
+
+##Question 2.18
+#a) 
+```{r armstr_import}
+library(readxl)
+armstr <- read_excel("ex02-18armstr.xls")
+controlarmstr <- subset(armstr,armstr$Group == "Control")
+plot(controlarmstr$NonDom,controlarmstr$Dom,main="NonDominant/Dominant Arm Strength", 
+     ylab="Dominant Arm Strength(cm^4/1000)", xlab="NonDominant Arm Strength(cm^4/1000)")
+```
+
+#b) The overall pattern of the data seems to be positive and linear, with dominant arm strength is slightly greater than non dominant arm strength.   
+
+#c) The form of the data is linear. The direction of the data is positive. The strength of the data is highly correlated.
+
+#d) There seems to be no outliers in the data. 
+
+#e) The relationship of the data looks to replicate an approximately linear relationship.
+
+##Question 2.19
+
+#a)
+```{r 2.19_import}
+baseballarmstr <- subset(armstr,armstr$Group == "Baseball")
+
+plot(baseballarmstr$NonDom,baseballarmstr$Dom,main="NonDominant/Dominant Arm Strength for Baseball Players", ylab="Dominant Arm Strength(cm^4/1000)", xlab="NonDominant Arm Strength(cm^4/1000)")
+
+```
+
+#b) The overall pattern of the data seems to be positive and linear, with dominant arm strength is largely greater than non dominant arm strength. There seems to be some striking deviations.  
+
+#c) The form of the data is linear. The direction of the data is positive. The strength of the data is mildly correlated.
+
+#d) There seems to three outlier in our data which does not follow the linear path at the points (31.5,36.9),(40.3,21), and(37.7,21.2)
+
+#e) The relationship of the data looks to replicate an approximately linear relationship despote a few points that stray from this.
+
+##Question 2.20
+
+#a)
+```{r compared_armstr}
+plot(baseballarmstr$NonDom, baseballarmstr$Dom, main="Arm Strength for Baseball Players & Control Group", ylab="Dominant Arm Strength(cm^4/1000)", xlab="NonDominant Arm Strength(cm^4/1000)",pch=7)
+points(controlarmstr$NonDom,controlarmstr$Dom,pch=1)
+legend("bottomright", 
+  legend = c("Baseball Group", "Control Group"),
+  pch = c(7,1))
+```
+
+#b)For our shown control group, there seems to be one striking deviation that strays away from the rest of the data at the point (25.2, 26.9) and the overall pattern sees to show a positive linear relationship. The baseball group also shows a positive and linear relationship with a point(31.5,36.9) that deviates from this general pattern. 
+
+##Question 2.22
+```{r 2.22}
+decay<- read_excel("ex02-22decay.xls")
+plot(decay$Time, decay$Count, main="Decay of Barium-137m",xlab="Time(In minutes)",ylab="Radioactivity(In Counts)")
+
+```
+
+#a) I chose the Time to be in the x axis as this is the independent variable in this expirement and chose radioactivity to be the y axis as this is the dependent variable.
+
+#b) The above scatter plot shows a negative relationship between the time and count of radioactivity. There seems to be no deviations in this plot. As time increases, radioactivity decreases.
+
+#c) The form of the relationship seems to be linear. The direction of the relationship is negative. The strength of the relationship is strong. 
+
+#d) There seems to be no outliers in this scatterplot.
+
+#e) Yes, this scatterplot seems to show a approximately linear relationship.
+
+
+
+##Question 2.23
+
+```{r 2.23}
+plot(decay$Time, decay$LogCount, main="Logged Decay of Barium-137m",xlab="Time(In minutes)",ylab="Logged Radioactivity(In Counts)")
+```
+
+#a)Just as the previous problem I chose the time variable to be in the x axis as this is the independent variable in this expirement and chose logged radioactivity to be the y axis as this is the dependent variable in this expirement.
+
+#b)The above scatter plot shows a negative relationship between the time and count of radioactivity, which is the same as our previous problem. There seems to be no deviations in this plot. As time increases, radioactivity decreases.
+
+
+#c) The form of the relationship seems to be linear. The direction of the relationship is negative. The strength of the relationship is strong. 
+
+#d) There seems to be no outliers in this scatterplot.
+
+#e)Yes, this scatterplot seems to show a approximately linear relationship.
+
+##Question 2.43
+
+```{r 2.43}
+armstr_corr<- cor(controlarmstr$NonDom,controlarmstr$Dom)
+print(armstr_corr)
+```
+
+#a)The correlation between the control group's dominant and non-dominant arm strength is .9048938.
+
+#b) Yes, it looks to be a good numerical summary of this plot because the relationship is reasonably linear with no real outliers, and is homoskedastic.
+
+##Question 2.44
+
+```{r 2.44}
+armstr_corr<- cor(baseballarmstr$NonDom,baseballarmstr$Dom)
+print(armstr_corr)
+```
+
+#a)The correlation between the control group's dominant and non-dominant arm strength is 0.7935887.
+
+#b) Yes, it looks to be a good numerical summary of this plot because the relationship is reasonably linear with a single outlier which explains the lowered correlation than our above answer for the control group.
+
+##Question 2.81
+
+```{r 2.81}
+datasets <- read_excel("ex02-81ansc.xls")
+cor(datasets$xA,datasets$yA)
+fitA <- lm(datasets$yA~datasets$xA)
+fitA
+
+cor(datasets$xB,datasets$yB)
+fitB <- lm(datasets$yB~datasets$xB)
+fitB
+
+cor(datasets$xC,datasets$yC)
+fitC <- lm(datasets$yC~datasets$xC)
+fitC
+
+cor(datasets$xD,datasets$yD)
+fitD <- lm(datasets$yD~datasets$xD)
+fitD
+
+
+
+```
+#a) The correlation for data set A is .816 while the least squares regression line is y = 3.01+.4999x which means that when y for x=10 is 8. The correlation for data B two is .816 while the least squares regression line is y = 3.01+.4999x which means that when y for x=10 is 8. The correlation for data set C is .816 while the least squares regression line is y= 3.009 + 4.99x which means that when y for x=10 is 7.999. The correlation for data set four is .817 while the least squares regression line is y= 3.001 + .5x which means that when y for x=10 is 8.001.
+#b)
+```{r 2.81 graph}
+plot(datasets$xA,datasets$yA,main = "Data Set A Graph")
+abline(fitA)
+
+plot(datasets$xB,datasets$yB,main = "Data Set B Graph")
+abline(fitB)
+plot(datasets$xC,datasets$yC,main = "Data Set C Graph")
+abline(fitC)
+plot(datasets$xD,datasets$yD,main = "Data Set D Graph")
+abline(fitD)
+```
+
+#c)Since each of these data sets have the same approximate regression line, the best fit would best data set A as the predicted value is closest to the actual observation.
+##Question 2.130
+
+```{r 2.130}
+hospital <- read_excel("ex02-130hosp.xls")
+
+hospitalA <- subset(hospital,hospital$Hospital == "A")
+
+hospitalB <- subset(hospital,hospital$Hospital == "B")
+
+hospitalA_poor <- subset(hospitalA, hospitalA$Condition == "Poor")
+hospitalA_poor_dead <- subset(hospitalA_poor, hospitalA_poor$Survival == "Dead")
+
+hospitalA_good <- subset(hospitalA,hospitalA$Condition == "Good")
+hospitalA_good_dead <- subset(hospitalA_good,hospitalA_good$Survival == "Dead")
+  
+hospitalB_poor <- subset(hospitalB,hospitalB$Condition == "Poor")
+hospitalB_poor_dead <- subset(hospitalB_poor,hospitalB_poor$Survival == "Dead")
+
+hospitalB_good <-subset(hospitalB,hospitalB$Condition == "Good")
+hospitalB_good_dead <- subset(hospitalB_good,hospitalB_good$Survival == "Dead")
+  
+hospitalAdeathrate_poor <- (hospitalA_poor_dead$Count/hospitalA_poor$Count)
+print(hospitalAdeathrate_poor)
+
+hospitalBdeathrate_poor <- (hospitalB_poor_dead$Count/hospitalB_poor$Count)
+print(hospitalBdeathrate_poor)
+
+hospitalAdeathrate_good <- (hospitalA_good_dead$Count/hospitalA_good$Count)
+print(hospitalAdeathrate_good)
+
+hospitalBdeathrate_good <- (hospitalB_good_dead$Count/hospitalB_good$Count)
+print(hospitalBdeathrate_good)
+```
+
+#a) The death rate for patients in hospital A who were classified as being in "poor" condition prior to surgery is 3.8%. The death rate for patients in hospital B who were classified as being in "poor" condition prior to surgery is 4%. The hospital in which "poor" patients will fair better is hospital A. 
+
+#b) The death rate for patients in hospital A who were classified as being in "good" condition prior to surgery is 1%. The death rate for patients in hospital B who were classified as being in "good" condition prior to surgery is 1.3%. The hospital in which "poor" patients will fair better is hospital A. 
+
+#c) My reccomendation to someone who is facing surgery and has to choose between hospitals would be to go to Hosputal A regardless of condition because the death rate is lower than Hospital B.
+
+#d) Hospital A can do better in both groups yet do worse overall because there are more poor condition patients than Hospital B which leads to skewed data.

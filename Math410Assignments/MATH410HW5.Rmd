@@ -1,0 +1,167 @@
+---
+title: "HW5"
+author: "Tyler Millan"
+date: "5/14/2018"
+output: word_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+6.24,6.25, 6.54, 6.58, 6.72, 6.129, 6.130
+
+
+6.137 and 6.138 except do each 10,000 times instead of 100
+
+6.24
+```{r 6.24}
+n = 10
+a = 1050
+s = 220
+
+error <- qnorm(0.975)*s/sqrt(n)
+left <- round(a-error,digits=2)
+right <- round(a+error, digits =2)
+```
+
+**answer:**We are 95% confident that average monthly rent for an unfurnished two-bedroom apartment is between $`r left` and $`r right`.
+
+6.25
+
+**answer:**It does not mean that 95% of the rents of all unfurnished two-bedroom apartments in this area, it instead states that on will be 95% confident to conclude the true rent lies in the range given rate, since the confidence interval describes the range of where the true average lies with a given confidence, meaning it will not include individual rents.
+
+6.54
+
+**a)**
+H0(Null Hypothesis): The percent of students who own cellphones is 88%(mu=88).
+
+Ha(Alternative Hypothesis): The percent of students who own cellphonesis greater than 88%(mu>88).
+
+**b)**
+H0(Null Hypothesis): The students in the morning recitation section have the same mean score as the whole class.(mu=75)
+
+Ha(Alternative Hypothesis): The students in the morning recitation section have a higher mean score that the whole class.(mu>75)
+
+**c)**
+H0(Null Hypothesis): The paper is the same as the old.(mu=0)
+HA(Alternative Hypothesis): The paper shows an improvement from than the old. (mu>=0)
+
+
+6.58
+```{r 6.58}
+pvala <- (1-pnorm(1.77))
+pvalb <- pnorm(1.77)
+pvalc <- 2*(1-pnorm(1.77))
+```
+
+**a)**
+
+The p-value if the alternative hypothesis is mu > mu0 is `r pvala`.
+
+**b)**
+
+The p-value if the alternative hypothesis is mu < mu0 is `r pvalb`.
+
+**c)**
+
+The p-value if the alternative hypothesis is mu != mu0 is `r pvalc`.
+
+6.72
+```{r 6.72}
+tcrit <- (2403.7-2811.5)/(880/sqrt(201))
+calpval <- round(2*pt(-abs(tcrit),df=201-1), digits =5)
+
+```
+
+**a)**Null Hypothesis: Female Canadian atheletes are not deficient in calorie intake. 
+H0: mu >= 2811.5
+Alternative Hypothesis: Female Canadian atheletes are deficient in calorie intake. 
+Ha: mu < 2811.5
+
+**b)**
+After running a t-test on our hypothesis we conclude that our p-value is 0, which means we reject our null hypothesis at all levels of significance, or in other words conclude that the average Female canadian athlete is deficient in their caloric intake and consume less than 2811.5kcal/d. 
+
+6.129
+```{r 6.129}
+x = mean(5.4,5.2,4.5,4.9,5.7,6.3)
+variance = .9
+n = 6
+lowerci = x-1.96*(.9/sqrt(n))
+upperci = x+1.96*(.9/sqrt(n))
+```
+
+**a)**The 95% confidence interval for the mean blood phosphorus level is (`r lowerci`,`r upperci`).
+
+```{r 6.129b}
+mu=4.8
+zscore = (x-mu)/(variance/sqrt(n))
+pholevelprob<-1-pnorm(zscore)
+```
+
+**b)** Our null hypothesis to test if there is strong evidence that this patient has a mean phosphorus level that exceeds 4.8 would be that mu <= 4.8. The alternative hypothesis would be that mu > 4.8. After finding our zscore of `r zscore`, we get a pvalue of `r pholevelprob`, which is very low meaning there is not strong evidence that the given patient has a mean phosporous level exceeding 4.8.
+
+6.130
+```{r 6.130}
+z90 = 1.645
+cellmean = 145
+cellerror <- z90*(8/sqrt(15))
+lowercellci = cellmean-cellerror
+uppercellci = cellmean+cellerror
+celltstat <- (cellmean-140)/(8/sqrt(15))
+cellpval = (1-pnorm(celltstat))
+
+```
+
+**a)**
+
+The 90% confidence interval for the mean cellulose content in the population is (`r lowercellci`,`r uppercellci`).
+
+**b)**
+
+Null Hypothesis(H0): Mu=140mg/g
+Alternative Hypothesis(Ha): Mu>140mg/g
+Because our p-value of `r cellpval` is smaller then most standard significance levels(1%,5%,10%) we reject our null hypothesis that the mean cellulose content was equal to 140mg/g.
+
+**c)**
+
+The statistical procedures above were valid because several assumptions were met. Those assumptions are:
+1)The value of the population standard deviation was known
+2)Population is normally distributed and/or number of observations was greater than 30.
+3)The sample is a simple random sampling.
+
+6.137 except do each 10,000 times instead of 100
+
+```{r 6.137}
+n = 12
+count=0
+for (i in 1:10000){
+  currentobs<-rnorm(n,mean=25,sd=4)
+  x = mean(currentobs)
+  lower=x-1.96*(4/sqrt(n))
+  upper=x+1.96*(4/sqrt(n))
+  if (25>lower&25<upper){
+    count=count+1
+  }
+}
+```
+
+After running this expirement 10,000 times we see that mu is included in the random normal distribution's 95% confidence interval `r count`. We would expect this happening at that rate since the normal distraibutions random numbers are being created with a mean value of 25, so we would expect most of these observations to contain 25 in the confidence interval. 
+
+6.138 except do each 10,000 times instead of 100
+
+```{r 6.138}
+n = 12
+count=0
+mu=25
+for (i in 1:10000){
+  currentobs<-rnorm(n,mean=25,sd=4)
+  z<-t.test(currentobs, mu=25)
+  if (z$p.value<.05){
+    count=count+1
+  }
+}
+```
+
+After running this expirement 10,000 times we see we reject our null hypothesis `r count` amount of times that mu=25.
+

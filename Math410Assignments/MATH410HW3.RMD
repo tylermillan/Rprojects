@@ -1,0 +1,176 @@
+---
+title: "HW3"
+author: "Tyler Millan"
+date: "4/24/2018"
+output: word_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+setwd("/Users/tylermillan/Desktop/MATH410/MATH410PROJECT3")
+
+```
+
+
+#Question 3.33
+
+a) The deficieny in this proposed experiment is the fact that each promotion is held on a different day of the week, which may skew its results as consumer habits may differ on those days. A improvement to fix this problem would be to hold the promotion on the same day.
+
+b) The deficieny in this proposed experiment is that it is two different campaigns in two different states which lead to comparing the results to be nearly usesless as many factors contribute to differing mentalities in the different states. A improvement to address this would be to have two different campaigns in the same state and compare the results.
+
+c) The deficieny in this proposed experiment is there is no control group to compare to. To address this a control group should be created over the same year period and be compared againt the expiremental strategy to see if there was a difference.
+
+#Question 3.83
+
+a)
+
+```{r unif}
+a <- runif(100)
+b <- runif(100)
+meanab <- (a+b)/2
+```
+
+b) The center looks to be around 0.5, the spread appears to be moderately wide, and the shape appears to be roughly symmetric, or normally distributed. 
+```{r densityplot1}
+plot(density(meanab))
+summary(meanab)
+sd(meanab)
+```
+
+c) The simulation estimate is very close in comparison to the population mean, `r mean(meanab)` vs .5.
+d) The simulation estimate is very close in comparison to the population standard deviation, `r sd(meanab)` vs `r sqrt(1/24)`
+
+
+#Question 3.85
+
+a)
+
+```{r unif2}
+one <- runif(100)
+two <- runif(100)
+three <- runif(100)
+four <- runif(100)
+five <- runif(100)
+six <- runif(100)
+seven <- runif(100)
+eight <- runif(100) 
+nine <- runif(100)
+ten <- runif(100)
+eleven <- runif(100)
+twelve <- runif(100)
+
+meana_l <- (one+two+three+four+five+six+seven+eight+nine+ten+eleven+twelve)/12
+```
+
+b) The center looks to again be around 0.5, the spread appears to be moderately wide, and the shape appears to be roughly symmetric, or normally distributed despite a few jumps. 
+
+```{r densityplot2}
+plot(density(meana_l))
+summary(meana_l)
+sd(meana_l)
+```
+
+c) The simulation estimate is very close in comparison to the population mean, sample: `r mean(meana_l)` vs population: 0.5.
+
+d) The simulation estimate is very close in comparison to the population standard deviation, sample: `r sd(meana_l)` vs population: `r 1/12`.
+
+The standard deviation was much lower when the sample size increased from 2 to 12 (SD went from `r sd(meanab)` to `r sd(meana_l)`). This is because the formula for standard deviation is set up so that as the sample size grows larger, the standard deviation gets smaller (due to the sample size being squared).
+
+
+Question 3.86 
+
+```{r unif3}
+one1 <- runif(500)
+two2 <- runif(500)
+three3 <- runif(500)
+four4 <- runif(500)
+five5 <- runif(500)
+six6 <- runif(500)
+seven7 <- runif(500)
+eight8 <- runif(500) 
+nine9 <- runif(500)
+ten10 <- runif(500)
+eleven11 <- runif(500)
+twelve12 <- runif(500)
+
+meana_l2 <- (one+two+three+four+five+six+seven+eight+nine+ten+eleven+twelve)/12
+
+plot(density(meana_l2))
+summary(meana_l2)
+sd(meana_l2)
+```
+
+a) The estimated mean and standard deviation are very close to their true population values, respectively (est: `r mean(meana_l2)` vs true: 0.5 for the mean; est: `r sd(meana_l2)` vs true: `r 1/12` for the SD). As we increased the sample size and amount of simulations per sample, our estimator got more efficient. It remains approximately normal in distribution, with a moderate spread of values and center around 0.5.
+
+
+#Question 3.115
+
+a) The standard of informed consent require that the pollster tell's the potential respondents the risk of harm the poll may bring and the nature of the study. The respondent must also be told the kind of questions they will be asked and how long it will take. 
+
+b) I think that it is required that the polling organization gives respondents the name and address if the organization that carries out the poll just in case the poll organization violates confidentiality, respondents would have the right to go legally.
+
+c) Revealing the sponsor to respondents would bias the poll's results. It is not necessary to reveal the name of the sponsor after the poll results are revealed to the public.
+
+
+#Question 4.9
+
+```{r Question 4.9}
+dicerolls <- function(){
+  return (sample(x = 1:6, size = 4, replace = TRUE))
+}
+
+counter = 0
+for (i in 1:20){
+  {diceroll <- dicerolls()}
+  if(6 %in% diceroll == TRUE){
+    counter=counter+1}
+}
+
+
+```
+
+After rolling four dice a total amount of 20 times the porportion of four dice being rolled that contained at least one 6 is `r counter/20`%.
+
+#Question 4.38
+
+```{r Question 4.38}
+possiblepins <- (choose(10,1)*choose(10,1)*choose(10,1)*choose(10,1))
+print(possiblepins)
+
+probNoZero <- (choose(9,1)*choose(9,1)*choose(9,1)*choose(9,1))/possiblepins
+probatleast<- (1-probNoZero)
+```
+a) The amount of possible pins is `r possiblepins`.
+
+b) The probability that a PIN assigned at random has at least one zero is `r probatleast`. 
+
+#Question 4.64
+
+a) Area of a triangle is calculated by taking 1/2 (base x height) so in this example where our height is 1 and our base is 2, we input these into the area formula to get 1/2 (1 x 2)= 1, so we verify that the area under the curve is equal to 1.
+
+b) With the same logic as above, we compute the probability that Y<1 by computing the triangle area equation with the base as 1 instead of 2 to get 1/2 (1 x 1) = 1/2. So the P(Y<1) is equal to 50%. 
+
+c) The probability that Y is greater than .6 or P(Y>.6) is found by first finding the probability that Y is less than or equal to .6 or P(Y<=.6) which we find by using the triangle area equation with .6 as the base and height. We find that this equals 1/2(.6)(.6)=.18 which we subtract from 1 to get .82. So the probability that Y is greater than .6 is 82%.
+
+#Question 4.79
+
+```{r Question 4.79}
+numserv <- c(0,1,2,3,4,5)
+probserv <- c(.3,.1,.1,.2,.2,.1)
+meanserv <- sum(numserv*probserv)
+print(meanserv)
+```
+
+The mean of the probability distribution of the number of servings of fruits and vegetables consumed per day in a population is 2.2.
+
+#Question 4.82
+
+```{r Question 4.82}
+varserv <- sum((numserv-meanserv)^2 * probserv)
+print(varserv)
+
+SDserv <- sqrt(varserv)
+print(SDserv)
+```
+
+The variance of the probability distribution of the number of servings of fruits and vegetables consumed per day in a population is 3.16. The standard deviation  of the probability distribution of the number of servings of fruits and vegetables consumed per day in a population is 1.7777.

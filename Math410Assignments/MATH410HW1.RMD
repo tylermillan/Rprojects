@@ -1,0 +1,129 @@
+---
+title: "MATH410 HW4"
+author: "Tyler Millan"
+date: "4/27/2018"
+output: word_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+setwd("~/Desktop/MATH410/MATH410HW4")
+```
+
+5.14, 5.16, 5.22, 5.50, 5.67, 5.68, 5.88
+
+#Question 5.14
+total sleep per night among college students: normally distributed with mean: 6.78
+std. dev. : 1.24 hours
+SRS of size n=150 and compute the svergae total sleep time
+
+```{r Question 5.14}
+popmean= 6.78
+sampsize= 150
+popstddev = 1.24
+stddev_avgtime = popstddev/sqrt(sampsize)
+prob_below_6.9 = pnorm((6.9-popmean)/stddev_avgtime)
+
+```
+
+a) The standard deviation for the average amount of time that college students sleep per night is `r stddev_avgtime`. 
+
+b) The 95 part of the 68-95-99.7 rule describes the variability of this sample mean by explaining that within two standard deviations of our data, 95% variability of our sample mean is between (`r popmean-stddev_avgtime*2`,`r popmean+stddev_avgtime*2` ).
+
+c) The probability that the average will be below 6.9 hours is `r prob_below_6.9`.
+
+#Question 5.16
+
+```{r Question 5.16}
+sampsize= 16
+popstddev = .82
+samp_mean = .1
+stddev_avgsize = popstddev/sqrt(sampsize)
+
+min_sampsize = (popstddev/samp_mean)^2
+```
+
+a) The standard deviation for the average file size when we take a SRS of 16 files from the population is `r stddev_avgsize`. 
+
+b) If we wanted the standard deviation of the sample mean to be no larger than .10 MB, the sample would need to be at least `r min_sampsize` which we round up to 68.
+
+#Question 5.22
+
+```{r 5.22}
+mean = 22.3
+std_dev = 5.2
+b_SRS = 16
+a_prob = round((1-pnorm((27-mean)/std_dev)),digits = 4)
+b_std_dev = (std_dev/sqrt(b_SRS))
+c_prob =round( (1-pnorm(((27-mean)/b_std_dev))), digits =4)
+```
+
+a) The approximate probablity that as single student randomly chosen from all those taking the test scores 27 or higher is `r a_prob`.
+
+b) With an SRS of 16 students, the mean of the sample mean score is `r mean` and the standard deviaiton of the sample mean score is `r b_std_dev`.
+
+c) The approximate probability that the mean score of the SRS of 16 is 27 or higher is `r c_prob`.
+
+d) In part a individual scores are roughly normal in this problem so our first probability is approximate. The probability found in the previous part is also approximate but x has a distribution that is closer to x in that case so it should be more accurate than the one in part a.
+
+#Question 5.50
+
+a) In a random sample of students in a fitness study, where X is the mean daily exercise time of the sample, using a binomial distribution for the random variable X would not be reasonable because a binomial distribution is meant to show the count of successes in n independent trials not the mean daily exercise time.
+
+b) Using a binomial distribution would be reasonable in showing X as the number of pairs of shoes with a defect out of a random sample of 20 shoes because X is shown as the count of successes(or shoes with a defect in this case) out of n independet trials(or 20 randomly chosen shoes).
+
+c) Using a binomial distribution would be reasonable in showing X as the number of college students out of an SRS that eat at least five servings of fruit or vegtables per day. The X that is given can be viewed as the successes of the n independent trials which can be seen as the size of the SRS. 
+
+d) It is reasonable to use a binomial distribution in this case where X is the number of days during the school year when you skip a class because X can be considered the number of successes(or skipped class days) out of n independent trials(or randomly chosen days during the school year).
+
+#Question 5.67
+
+```{r Question 5.67}
+num_trials= 20
+success_prob =.25
+failure_prob = .75
+prob_a = dbinom(1,size=1,prob=.25)
+
+prob_b = (1-pbinom(9,size=20,prob=.25))
+std_dev_c = sqrt(num_trials*success_prob*failure_prob)
+```
+
+a) Since there are 4 types of cards, the probability of guessing the correct guess on a single card is `r prob_a`.  
+
+b) The probability that the subject correctly guesses at least 10 of the 20 shapes is `r prob_b`.
+
+c) In many repetitions of this expirement with a subject who is guessing, a subject will guess (20*.25) = 5 cards on average. The standard deviation of the number of correct guesses is `r std_dev_c`.
+
+d) Since the subject knows that the deck has 25 cards of 5 types, each trial is not independent and depends on previous draws of the cards, which means that the binomial model is not appropriate.  
+
+
+#Question 5.68
+
+```{r Question 5.68}
+n = 1200
+p =.75
+
+mean_students = n*p
+std_dev_students = sqrt(n*p*(1-p))
+
+prob_b = 1-(pnorm((800-mean_students)/std_dev_students))
+prob_c = 1-(pnorm((950-mean_students)/std_dev_students))
+
+mean_d = (1300*.75)
+std_dev_d = sqrt(1300*.75*(1-.75))
+prob_d = 1-(pnorm((950-mean_d)/std_dev_d))
+```
+a) The mean of the number X of students who accept is `r mean_students`. The standard deviation of the number X of students who accept is `r std_dev_students`. 
+
+b) Using the Normal approximation, the probability that at least 800 students accept is `r prob_b`.
+
+c) The probability that more than 950 will accept is `r prob_c`.
+
+d) If the college decides to increase the number if admissions offers to 1300 , the probability that more than 950 will accept is `r prob_d`.
+
+#Question 5.88
+
+a) Yes it is reasonable to take the mean of the total income of X + Y as mu x and mu y
+because they both may or may not be independent of one another so the sure way to compute the mean of the total income between the two would be adding their respective means together.
+
+b) It is not reasonable to take the variance of total income to be the sum of each respective population variance because just as before, either of their variances may or may not be independent but unlike the previous problem this presents an issue because this will change how we would compute the variance of their total. If they were independent the variance would be found by adding together the variance of x and y, but if they are not independent of one another we would need to find the variance by adding the two variances together and also adding the covariance of the two multiplied by 2. 

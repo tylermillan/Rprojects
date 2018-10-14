@@ -1,0 +1,97 @@
+---
+title: "HW8"
+author: "Tyler Millan"
+date: "5/30/2018"
+output: word_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+setwd("~/Desktop/MATH410/HW8")
+library(readxl)
+```
+
+9.31, 9.32, 10.23, 10.27
+
+9.31
+
+**answer:** Since we are assuming the die is fair and has an equal likelihood of landing on one of it's six sides, our expected counts to run a goodness-of-fit test on our data would be to take the total number of rolls and multiply it by our probability for all sides of the die. We would end up with an expected count of 100 for all 6 sides of the die. 
+
+9.32
+```{r 9.32}
+diedata <- read_excel("ex09-31die.xls")
+expected <- rep(1/6,6)
+observed <- (diedata$Count)
+dietest<-chisq.test(x = observed, p = expected)
+dietest$p.value
+```
+
+**answer:** After running a goodness-of-fit test on the given observed data on the die rolls, as well as the values we computed above for the expected die rolls, we observe a chi-square test statistic of `r dietest$statistic` after running the test with a degrees of freedom of 5. We are testing as our null hypothesis that the die is fair and our alternative is the die is not fair. We end up with a p-value of `r dietest$p.value` which means we reject our null hypothesis at the 5% level, which means we have sufficient evidence that our dice is not fair. Our result is statistically significant the 5% level.
+
+
+10.23
+
+```{r 10.23}
+
+beerdata <- read_excel("ex10-23bac.xls")
+plot(beerdata$Beers,beerdata$BAC, main ="BAC/# of Beers Regression", ylab = "BAC",xlab = "# of Beers")
+beerreg<-lm(beerdata$BAC~beerdata$Beers)
+abline(beerreg,col="red")
+beer_r2<- summary(beerreg)$r.squared
+summary(beerreg)
+```
+
+a) The equation we get from our least-squares regression line for predicting BAC from number of beers is BAC = `r beerreg$coefficients[1]`+`r beerreg$coefficients[2]`*Beers. The r^2 for our data is `r beer_r2` or 80% for our coefficient of determination, which means that around 80% of our variation in BAC is explained by # of beers consumed. From our regression line we can interpret it as for each additional Beer consumed, BAC is increased by .018.
+
+b) To check for significant evidence that drinking more beer increases BAC on the average population of all students our null hypothesis is H0:B=0(no effect), while the alternative hypothesis is Ha:B>0(there is a positive effect). We see after summarizing our regression data that the test statistic is given by 7.480 and our p-value is 2.969e-06 which can be rounded to 0. This means that we reject our null hypothesis at all levels and that it is statistically significant. We can also conclude that drinking more beer increases BAC. 
+
+```{r 10.23c}
+estmean = (beerreg$coefficients[1] + beerreg$coefficients[2]*(.08))
+
+beerlowerci <- estmean - (15.42*(.0024))
+beerupperci <- estmean + (15.42*(.0024))
+```
+
+c) A 90% prediction interval for Steve's BAC is between ("r beerlowerci", "r beerupperci"). Steve can be 90% confident that if he is pulled over he wont be arrested since .08 is not contained in the 90% range. 
+
+10.27
+```{r 10.27}
+
+salesdata<-read_excel("ex10-27sales.xls")
+plot(salesdata$`Assessed Value`,salesdata$`Sales Price`, main ="Assessed Value/Sale Price", xlab = "Asessed Value(in thousands $'s)",ylab = "Sales Price(in thousand $'s)")
+
+homereg<-lm(salesdata$`Sales Price`~salesdata$`Assessed Value`)
+```
+
+a) There are 17 homes that have a sales price greater than their assessed value. I dont believe that this trend would hold with a larger population as only 50% of homes have sold higher than their assessed values out of all of the homes sold in the data. 
+
+b) The relationship between the assessed and sales price shape wise looks to move from the lower left to upper right which represents a positive and linear relationship between the two tested variables.
+
+c) After running a least squares regression with sales price from assessed value we see that the equation we are given is Sale Price = `r homereg$coefficients[1]`+`r homereg$coefficients[2]`*Assessed Value. 
+
+```{r 10.27d}
+residy <- resid(homereg)
+meanresid <- mean(residy)
+plot(x=salesdata$`Assessed Value`,y=residy,ylab="residual values", xlab="Assessed Value", main = "Residual Value Graph")
+```
+
+d) The observation of property 11 appears to be unusual in the residual plot and it is approximately three standard deviations away from its predicted value. 
+
+e) 
+```{r 10.27e}
+
+newsalesdata=salesdata[-11,]
+
+plot(newsalesdata$`Assessed Value`,newsalesdata$`Sales Price`, main ="Assessed Value/Sale Price", xlab = "Asessed Value(in thousands $'s)",ylab = "Sales Price(in thousand $'s)")
+
+newhomereg<-lm(newsalesdata$`Sales Price`~newsalesdata$`Assessed Value`)
+```
+
+e) After running a least squares regression with sales price from assessed value we see that the equation we are given is Sale Price = `r newhomereg$coefficients[1]`+`r newhomereg$coefficients[2]`*Assessed Value. 
+
+```{r 10.27f}
+newresidy <- resid(newhomereg)
+newmeanresid <- mean(newresidy)
+plot(x=newsalesdata$`Assessed Value`,y=newresidy,ylab="residual values", xlab="Assessed Value", main = "Residual Value Graph")
+```
+f) As we can see from our new residual plot, after removing property 11 we do not see anything unusual. 

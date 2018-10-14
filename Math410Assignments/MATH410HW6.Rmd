@@ -1,0 +1,218 @@
+---
+title: "MATH410HW6"
+author: "Tyler Millan"
+date: "5/23/2018"
+output: word_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+setwd("~/Desktop/MATH410/HW6")
+library(readxl)
+```
+
+7.30
+a)
+```{r 7.30}
+fuel <- c(41.5,50.7,36.6,37.3,34.2,45.0,48.0,43.2,47.7,42.2,43.2,44.6,48.4,46.4,46.8,39.2,37.3,43.5,44.3,43.3)
+hist(fuel)
+```
+
+As shown by the histogram of the data above, it looks to be distributed approximately symmetric with no outliers in the data. Because of this it would be appropriate to use methods based on a normal distribution. 
+
+```{r 7.30b}
+fuelmean <- mean(fuel)
+fuelstddev <- sd(fuel)
+fuelstderror <- fuelstddev/sqrt(20)
+fuelmoferror <- abs(qt(0.025, 19)*fuelstderror)
+```
+
+b) The mean of our fuel efficieny data is `r fuelmean` mpg.The standard deviation,standard error,and margin of error of our fuel efficieny data is `r fuelstddev`mpg, `r fuelstderror` mpg,`r fuelmoferror` respectively.
+
+```{r 7.30c}
+fuellower<- fuelmean-fuelmoferror
+fuelupper<- fuelmean+fuelmoferror
+```
+
+c) We are 95% confident for mu, the mean miles per gallon for this vehicle based on this data lies between $`r fuellower` and $`r fuelupper`.
+
+
+7.38
+
+a)
+
+```{r 7.38}
+jockos<-c(1410,1550,1250,1300,900,1520,1750,3600,2250,2840)
+other<-c(1250,1300,1250,1200,950,1575,1600,3380,2125,2600)
+diffprice <- (jockos-other)
+
+diffmean <- mean(diffprice)
+diffstddev <- sd(diffprice)
+difftest<-t.test(x=jockos,y=other,paired=TRUE, conf.level = 0.95)
+difflower <- difftest$conf.int[1]
+diffupper <- difftest$conf.int[2]
+```
+
+The mean difference between Jocko's garage prices and the other garage's prices is `r diffmean`. The standard deviation of the difference between Jocko's garage prices and the other garage's prices is `r diffstddev`.
+
+b) To test whther there is a difference between Jocko's garage prices and other garage we would have our null and alternative hypothesis to be the following:
+H0:mu=0
+Ha:mu!=0
+where mu in this case is the mean of the differences.
+
+After running a paired t-test between these two data sets we find a p-value of `r difftest$p.value` which means that since it is below .05 we reject our null hypothesis that the difference between the two garage's prices is 0. This means that there is sufficient evidence to indicate a difference in prices between the two and is statistically significant.
+
+c) The 95% confidence interval for the difference in price between Jocko's and the other garag is between `r difflower` and `r diffupper`.
+
+d) Since the insurance company is considering seeking repayment from 1000 claims that were filed with Jocko's garage from the previous year, the reccomended repayment that the insurance sompany should seek in the range of $32.16 and $195.84 because this would account for a majority of the upcharge by Jocko's garage in comparison to the other garage. 
+
+7.45
+
+a) We are looking to come up with the null and alternative hypotheses for examining whether or not a course improves one's French speaking skills. The null hypothesis is that the pre test ad post test have the same mean scores; H0:mu=0. The alternative hypothesis is that the mean score of posttest is greater than the mean score of pretest; H1:mu>0.
+
+```{r 7.45a}
+frenchdata <- read_excel("ex07-45sumlang.xls")
+hist(frenchdata$gain)
+frenchmean <- mean(frenchdata$gain)
+frenchstddev <- sd(frenchdata$gain)
+frenchttest<-t.test(x=frenchdata$gain,conf.level = 0.95,mu=0)
+
+```
+
+b) From the histogram above we can see that our data distribution is skewed to the left. It has a spread from -6 to 6 and there is a outlier on the left side of the distribution. Further analysis of the data can be done by looking at the mean and standard deviation of the gains from the data which are `r frenchmean` and `r frenchstddev` respectively. 
+
+c) Since our p-value of `r frenchttest$p.value` is less than .05 therefore making significant at al levels and meaning that we reject our null hypothesis. The degrees of freedom for this ttest is 20-1 so 19. The tstat for this test is `r frenchttest$statistic`.
+
+d) The 95% confidence interval for the mean improvement is between `r frenchttest$conf.int[1]` and `r frenchttest$conf.int[2]`.
+
+7.71
+
+```{r 7.71}
+spenddata<-read_excel("ex07-71sadness.xls")
+sad = subset(spenddata, spenddata$Group =='S')
+neutral = subset(spenddata, spenddata$Group == 'N')
+nmean<-round(mean(neutral$Price),digits = 3)
+nsd<- round(sd(neutral$Price),digits = 3)
+
+smean<-round(mean(sad$Price),digits = 3)
+ssd<- round(sd(sad$Price),digits = 3)
+
+
+hist(sad$Price)
+hist(neutral$Price)
+
+
+```
+
+a) The distribution of the sad and neutral data sets look to both close to normally distributed with no extreme outliers in either set meaning we should be able to use t-tests on these datasets. 
+
+b)
+
+```{r 7.71b}
+tabledata<-matrix(c(14,nmean,nsd,17,smean,ssd),ncol=3,byrow=TRUE)
+rownames(tabledata)<-c("Neutral","Sad")
+colnames(tabledata)<-c("Total","Mean","StDev")
+spendtable <- as.table(tabledata)
+print(spendtable)
+
+spendtest <-  t.test(neutral$Price, sad$Price, alternative = "two.sided", var.equal = FALSE)
+```
+
+c) We must test whether there is any significant difference of the mean price of purchasing insulated water bottles for the sad and neutral group.
+Our null hpothesis:
+H0: mu1=m2(no sigfinicant differences in the mean price for both groups for insulated water bottles)
+Ha: mu1!=m2(there is a sigfinicant difference in the mean price for both groups for insulated water bottles)
+
+d) After running a two sample t-test for equal variances to test this claim we get the t-test statistic of `r spendtest$statistic`. We reject our null hypothesis at the .05 significance level since our pvalue is less than that at `r spendtest$p.value`. We can conclude that there is sufficient evidence to support the claim that the average price of purchasing insulated water bottles for the neutral group differs from the average price for the sad group.
+
+e) The 95% confidence interval for difference in average satisfaction is between `r spendtest$conf.int[1]` and `r spendtest$conf.int[2]`.
+
+7.73
+
+```{r 7.73}
+fastfood <- read_excel("ex07-73drvthru.xls")
+tbell<- c(5/307, 3/307, 54/307, 109/307, 136/307)
+mcd <- c(2/362, 22/362, 73/362, 165/362, 100/362)
+
+tbellxf<- ((1^2*tbell[1])+(2^2*tbell[2])+(3^2*tbell[3])+(4^2*tbell[4])+(5^2*tbell[5]))*307
+mcxf <- ((1^2*mcd[1])+(2^2*mcd[2])+(3^2*mcd[3])+(4^2*mcd[4])+(5^2*mcd[5]))*362
+
+tbellmean <- (1*tbell[1])+(2*tbell[2])+(3*tbell[3])+(4*tbell[4])+(5*tbell[5])
+mcdmean <- (1*mcd[1])+(2*mcd[2])+(3*mcd[3])+(4*mcd[4])+(5*mcd[5])
+
+mcdsd <- sqrt((1/362)*mcxf-mcdmean^2)
+tbellsd <- sqrt((1/307)*tbellxf-tbellmean^2)
+
+tb <- c(rep(1, 5), rep(2, 3), rep(3, 54), rep(4, 109), rep(5, 136))
+mc <- c(rep(1, 2), rep(2, 22), rep(3, 73), rep(4, 165), rep(5, 100))
+
+fftest<- t.test(tb,mc, var.equal=TRUE)
+
+```
+a) From the data we are given, a two sample t-test is appropriate.
+
+b) The mean and standard deviation for Taco Bell are respectively `r mcdmean` and `r mcdsd`.
+
+The mean and standard deviation for Taco Bell are respectively `r tbellmean` and `r tbellsd`.
+
+c) The null and alternative hypotheses would be the following:
+H0: mu1=mu2
+Ha: mu1!=mu2
+After running a two sample t-test for equal variances to test this claim we get the t-test statistic of `r fftest$statistic`. We fail to reject our null hypothesis at the .05 significance level since our pvalue is greater at `r fftest$p.value`. We can conclude that there is insufficient evidence to support the claim that the mean of McDondald's chain customer satisfaction is different from a Taco Bell chains.
+
+d) The 95% confidence interval for difference in average satisfaction is between `r fftest$conf.int[1]` and `r fftest$conf.int[2]`.
+
+7.134
+
+```{r 7.134}
+n=80
+#Body Fat
+amean_fat <- 25.61
+smean_fat <- 32.51
+avar_fat <- 5.54
+svar_fat <- 8.05
+
+fattstat = -6.3155
+fatpval <-  round(pt(fattstat,n-1),digits = 4)
+#BMI
+amean_bmi <- 21.60
+smean_bmi <-26.41
+avar_bmi <- 2.46
+svar_bmi <-2.73
+
+bmitstat= -11.707
+bmipval=round(pt(bmitstat,n-1),digits = 4)
+
+#calcium
+amean_calc <- 297.13
+smean_calc <- 580.54
+avar_calc <- 516.63
+svar_calc <- 372.77
+
+calctstat<- -3.9790
+calcpval<- round(pt(calctstat,n-1),digits = 4)
+  
+#milk
+amean_milk <- 2.21
+smean_milk <- 1.82
+avar_milk <- 1.46
+svar_milk <- 1.24
+
+milktstat<- 1.8211
+milkpval<- round(pt(milktstat,n-1),digits = 4)
+
+
+```
+
+a) Hypothesis testing for all the characteristics that the mean is the same between the two groups(using .05 significance level for the test).
+
+-The first characterstic of body fat where our null hypothesis is that the mean body fat percentage between athletes and sedentary lifestyle teens will not differ. We reject our null hypothesis in this instance since our p-value `r fatpval` is so low, meaning that there is a statistical difference between the mean body fat percentage of the athletic and sedentary populations.
+
+-The second characterstic of body mass index where our null hypothesis is that the mean BMI between athletes and sedentary lifestyle teens will not differ. We reject our null hypothesis in this instance since our p-value `r bmipval` is so low, meaning that there is a statistical difference between the mean body mass index of the athletic and sedentary populations.
+
+-The third characterstic of calcium deficiency where our null hypothesis is that the mean calcium deficiency between athletes and sedentary lifestyle teens will not differ. We reject our null hypothesis in this instance since our p-value `r calcpval` is so low, meaning that there is a statistical difference between the mean calcium deficiency of the athletic and sedentary populations.
+
+- The last characsteristic that we will test for is the number of glasses of mik consumed where our null hypothesis is that the number of glasses of milk consumed by athletes and sedentary lifestyle teens will not differ. We fail to reject our null hypothesis in this instance since our p-value `r milkpval` pvalue is much greater than .05, meaning that there is not a statistical difference between the mean milk consumption of the athletic and sedentary populations.
+ 
+
+b)If we summarize all the previous data we can see that in every single category except milk consumption, students classified as athletes were statistically different then their sedentary classmates. This intuitively makes sense as we would expect an athletic individual to have stronger bones, lower body mass from their active lifestyle, and lower body fat percentage. Milk consumption which is the one category not statistically significant makes sense as to why it does not differ, because it would not be affected at all by an individuals lifestyle. 
